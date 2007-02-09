@@ -1,0 +1,6 @@
+Revision history for Perl extension File::Mirror.
+
+0.01  Tue Feb  6 10:57:03 2007
+	- original version; created by h2xs 1.22 with options
+		-XA File::Mirror
+
