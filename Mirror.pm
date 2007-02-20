@@ -1,4 +1,4 @@
-package File::Mirror::Mirror;
+package File::Mirror;
 use base qw(Exporter);
 use strict;
 use warnings;
@@ -11,7 +11,7 @@ our @EXPORT = qw(
                     recursive
                );
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub recursive(&@) {
     my ($code, $src, $dst) = @_;
