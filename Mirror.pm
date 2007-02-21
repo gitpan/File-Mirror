@@ -11,14 +11,13 @@ our @EXPORT = qw(
                     recursive
                );
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 our $from;
 our $to;
 
 sub recursive(&@) {
     my ($code, $src, $dst) = @_;
-    my ($vol, $dir, $file) = File::Spec->splitpath($src);
-    my @src = File::Spec->splitdir($dir);
+    my @src = File::Spec->splitdir($src);
     pop @src unless defined $src[$#src] and $src[$#src] ne '';
     my $src_level = @src;
     find({ wanted => sub {

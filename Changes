@@ -1,5 +1,8 @@
 Revision history for Perl extension File::Mirror.
 
+0.04  21 Feb 2007
+        - ignore the trailing '/' in source path
+
 0.03  21 Feb 2007
         - fixed the wrong name used in docs.
         - change $a, $b to $from and $to.
