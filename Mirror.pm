@@ -11,16 +11,20 @@ our @EXPORT = qw(
                     recursive
                );
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
+our $from;
+our $to;
 
 sub recursive(&@) {
     my ($code, $src, $dst) = @_;
     my ($vol, $dir, $file) = File::Spec->splitpath($src);
-    my $src_level = File::Spec->splitdir($dir);
+    my @src = File::Spec->splitdir($dir);
+    pop @src unless defined $src[$#src] and $src[$#src] ne '';
+    my $src_level = @src;
     find({ wanted => sub {
                my @src = File::Spec->splitdir($File::Find::name);
                my $tgt = File::Spec->catfile($dst, @src[$src_level..$#src]);
-               local ($a, $b) = ($File::Find::name, $tgt);
+               local ($from, $to) = ($File::Find::name, $tgt);
                $code->();
            },
            no_chdir => 1,
@@ -30,7 +34,7 @@ sub recursive(&@) {
 }
 
 sub mirror {
-    recursive { -d $a ? do { mkdir($b) unless -d $b } : copy($a, $b) } @_;
+    recursive { -d $from ? do { mkdir($to) unless -d $to } : copy($from, $to) } @_;
 }
 
 1;
@@ -50,7 +54,7 @@ File::Mirror - Perl extension for recursive directory copy
 
   # or do things you like
 
-  recursive { copy($a, $b) } '/path/A', '/path/B';
+  recursive { copy($File::Mirror::a, $File::Mirror::b) } '/path/A', '/path/B';
 
 =head1 DESCRIPTION
 
@@ -78,11 +82,11 @@ B<recursive>
   recursive {...} $src, $dst
 
 Code block will be code with each file and sub-directories found in
-$src. Inside the code block, C<$a> will be set to source file name,
-C<$b> will be set to destination file name.
+$src. Inside the code block, C<$File::Mirror::from> will be set to source
+file name, C<$File::Mirror::to> will be set to destination file name.
 
 User need to distinguish directories, file, symbol links, and devices
-from C<$a>.
+from C<$File::Mirror::from>.
 
 =head1 AUTHOR
 
@@ -93,6 +97,6 @@ Jianyuan Wu, E<lt>jwu@cpan.orgE<gt>
 Copyright 2007 by Jianyuan Wu
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+it under the same terms as Perl itself.
 
 =cut

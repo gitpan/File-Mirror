@@ -1,5 +1,9 @@
 Revision history for Perl extension File::Mirror.
 
+0.03  21 Feb 2007
+        - fixed the wrong name used in docs.
+        - change $a, $b to $from and $to.
+
 0.02  19 Feb 2007
         - fixed the package name
 
