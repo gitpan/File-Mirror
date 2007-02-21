@@ -1,5 +1,8 @@
 Revision history for Perl extension File::Mirror.
 
+0.05  21 Feb 2007
+        - ouput the $from in native format
+
 0.04  21 Feb 2007
         - ignore the trailing '/' in source path
 

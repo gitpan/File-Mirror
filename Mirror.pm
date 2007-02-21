@@ -11,7 +11,7 @@ our @EXPORT = qw(
                     recursive
                );
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 our $from;
 our $to;
 
@@ -22,8 +22,8 @@ sub recursive(&@) {
     my $src_level = @src;
     find({ wanted => sub {
                my @src = File::Spec->splitdir($File::Find::name);
-               my $tgt = File::Spec->catfile($dst, @src[$src_level..$#src]);
-               local ($from, $to) = ($File::Find::name, $tgt);
+               local $from = File::Spec->catfile($src, @src[$src_level .. $#src]);
+               local $to = File::Spec->catfile($dst, @src[$src_level .. $#src]);
                $code->();
            },
            no_chdir => 1,
