@@ -1,5 +1,8 @@
 Revision history for Perl extension File::Mirror.
 
+0.10  26 Feb 2007
+        - pass $_[0], $_[1] as the source and destination file name
+
 0.05  21 Feb 2007
         - ouput the $from in native format
 

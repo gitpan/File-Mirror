@@ -11,9 +11,7 @@ our @EXPORT = qw(
                     recursive
                );
 
-our $VERSION = '0.05';
-our $from;
-our $to;
+our $VERSION = '0.10';
 
 sub recursive(&@) {
     my ($code, $src, $dst) = @_;
@@ -22,9 +20,9 @@ sub recursive(&@) {
     my $src_level = @src;
     find({ wanted => sub {
                my @src = File::Spec->splitdir($File::Find::name);
-               local $from = File::Spec->catfile($src, @src[$src_level .. $#src]);
-               local $to = File::Spec->catfile($dst, @src[$src_level .. $#src]);
-               $code->();
+               my $from = File::Spec->catfile($src, @src[$src_level .. $#src]);
+               my $to = File::Spec->catfile($dst, @src[$src_level .. $#src]);
+               $code->($from, $to);
            },
            no_chdir => 1,
          },
@@ -33,7 +31,7 @@ sub recursive(&@) {
 }
 
 sub mirror {
-    recursive { -d $from ? do { mkdir($to) unless -d $to } : copy($from, $to) } @_;
+    recursive { -d $_[0] ? do { mkdir($_[1]) unless -d $_[1] } : copy(@_) } @_;
 }
 
 1;
@@ -53,7 +51,7 @@ File::Mirror - Perl extension for recursive directory copy
 
   # or do things you like
 
-  recursive { copy($File::Mirror::a, $File::Mirror::b) } '/path/A', '/path/B';
+  recursive { my ($from, $to) = @_; copy($from, $to) } '/path/A', '/path/B';
 
 =head1 DESCRIPTION
 
@@ -81,11 +79,11 @@ B<recursive>
   recursive {...} $src, $dst
 
 Code block will be code with each file and sub-directories found in
-$src. Inside the code block, C<$File::Mirror::from> will be set to source
-file name, C<$File::Mirror::to> will be set to destination file name.
+$src. Inside the code block, C<$_[0]> will be set to source
+file name, C<$_[1]> will be set to destination file name.
 
 User need to distinguish directories, file, symbol links, and devices
-from C<$File::Mirror::from>.
+from C<$_[0]>.
 
 =head1 AUTHOR
 
